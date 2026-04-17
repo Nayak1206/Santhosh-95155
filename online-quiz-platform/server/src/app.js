@@ -3,7 +3,12 @@ import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import errorHandler from './middleware/errorHandler.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Route imports
 import authRoutes from './routes/authRoutes.js';
@@ -48,13 +53,27 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-// Base route
-app.get('/', (req, res) => {
+// Base route for API
+app.get('/api', (req, res) => {
   res.json({ message: 'Online Quiz Platform API is running' });
 });
 
-// 404 Handler
-app.use((req, res) => {
+// Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+  // Correct path to client/dist relative to server/src
+  const clientBuildPath = path.join(__dirname, '../../client/dist');
+  app.use(express.static(clientBuildPath));
+  
+  app.get('*', (req, res, next) => {
+    // If it's an API request that didn't match any route, move to 404
+    if (req.path.startsWith('/api/')) return next();
+    // Otherwise serve the React app
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
+
+// 404 Handler for API
+app.use('/api', (req, res) => {
   res.status(404).json({ message: "API route not found" });
 });
 

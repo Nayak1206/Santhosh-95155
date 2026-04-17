@@ -1,0 +1,12 @@
+{
+  "name": "online-quiz-platform-root",
+  "version": "1.0.0",
+  "description": "Root configuration for Online Quiz Platform deployment",
+  "scripts": {
+    "build": "npm install --prefix online-quiz-platform/server && npm install --prefix online-quiz-platform/client && npm run build --prefix online-quiz-platform/client",
+    "start": "NODE_ENV=production npm start --prefix online-quiz-platform/server"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
