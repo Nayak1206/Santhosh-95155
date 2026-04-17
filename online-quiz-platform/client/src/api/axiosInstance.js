@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  // Use relative path since frontend is served by the same host in production
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
 });
 
