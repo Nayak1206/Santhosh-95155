@@ -39,12 +39,21 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl) or matching our list
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // 1. Allow internal requests (no origin)
+    if (!origin) return callback(null, true);
+
+    // 2. Exact match check
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
     }
+
+    // 3. Dynamic Vercel check for subdomains
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+
+    // 4. Deny others
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true
 }));
