@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #22c55e;
+  --color-primary-dark: #16a34a;
+  --color-secondary: #3b82f6;
+  --color-secondary-light: #eff6ff;
+  --color-accent: #f0fdf4;
+  --color-surface: #ffffff;
+  --color-background: #f8fafc;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+
+  --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-text-primary font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+}
+
+@layer components {
+  /* Premium Glassmorphism & Soft Shadows */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+
+  /* Interactive Elements */
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white rounded-2xl px-6 py-3 font-bold transition-all duration-300 transform active:scale-95 shadow-lg shadow-green-200 disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply bg-white border border-slate-100 hover:bg-slate-50 text-slate-600 rounded-2xl px-6 py-3 font-bold transition-all duration-300 transform active:scale-95 shadow-sm disabled:opacity-50;
+  }
+
+  .card {
+    @apply bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }

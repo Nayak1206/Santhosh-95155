@@ -1,0 +1,30 @@
+{
+  "name": "quiz-platform-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "seed": "node src/db/seed.js",
+    "migrate": "node src/db/migrations.js"
+  },
+  "dependencies": {
+    "@libsql/client": "latest",
+    "bcrypt": "latest",
+    "cookie-parser": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "express-rate-limit": "latest",
+    "jsonwebtoken": "latest",
+    "morgan": "latest",
+    "multer": "latest",
+    "pdfkit": "latest",
+    "uuid": "^9.0.1",
+    "xlsx": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
