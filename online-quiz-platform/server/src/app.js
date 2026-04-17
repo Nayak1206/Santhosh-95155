@@ -86,7 +86,7 @@ if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '../../client/dist');
   app.use(express.static(clientBuildPath));
   
-  app.get('(.*)', (req, res, next) => {
+  app.get('/:path*', (req, res, next) => {
     // If it's an API request that didn't match any route, move to 404
     if (req.path.startsWith('/api/')) return next();
     // Otherwise serve the React app
