@@ -33,7 +33,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://santhosh-95155.onrender.com'
+  'https://santhosh-95155.onrender.com',
+  'https://santhosh-95155.vercel.app'
 ];
 
 app.use(cors({

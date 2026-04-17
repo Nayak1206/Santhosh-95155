@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  // Use relative path since frontend is served by the same host in production
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  // Use Vercel env variable if available, otherwise fallback to the Render backend URL
+  baseURL: import.meta.env.VITE_API_URL || 'https://santhosh-95155.onrender.com/api',
   withCredentials: true,
 });
 
