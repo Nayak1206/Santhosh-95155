@@ -86,10 +86,8 @@ if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '../../client/dist');
   app.use(express.static(clientBuildPath));
   
-  app.get('/:path(.*)', (req, res, next) => {
-    // If it's an API request that didn't match any route, move to 404
-    if (req.path.startsWith('/api/')) return next();
-    // Otherwise serve the React app
+  // Use a regex literal to avoid path-to-regexp compatibility issues in Express 5
+  app.get(/^(?!\/api|\/uploads).+/, (req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 }
