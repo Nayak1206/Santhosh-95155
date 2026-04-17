@@ -8,7 +8,8 @@ export function verifyToken(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Access token required' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const secret = process.env.JWT_SECRET || 'fallback_jwt_secret_2026';
+    const decoded = jwt.verify(token, secret);
     req.user = decoded; // { id, email, role, name }
     next();
   } catch (err) {

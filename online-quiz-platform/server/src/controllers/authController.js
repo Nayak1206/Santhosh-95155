@@ -4,8 +4,11 @@ import { getDb } from '../config/db.js';
 
 const generateTokens = (user) => {
   const payload = { id: user.id, email: user.email, role: user.role, name: user.name };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
-  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+  const secret = process.env.JWT_SECRET || 'fallback_jwt_secret_2026';
+  const refreshSecret = process.env.JWT_REFRESH_SECRET || 'fallback_refresh_secret_2026';
+  
+  const token = jwt.sign(payload, secret, { expiresIn: '15m' });
+  const refreshToken = jwt.sign(payload, refreshSecret, { expiresIn: '7d' });
   return { token, refreshToken };
 };
 

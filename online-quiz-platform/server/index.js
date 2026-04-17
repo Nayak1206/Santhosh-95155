@@ -1,5 +1,6 @@
 // server/index.js
 import 'dotenv/config';
+import './src/config/env.js';
 import { initDb } from './src/config/db.js';
 import { runMigrations } from './src/db/migrations.js';
 import { seedData } from './src/db/seed.js';
