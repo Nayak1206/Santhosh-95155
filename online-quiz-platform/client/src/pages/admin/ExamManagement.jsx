@@ -45,14 +45,34 @@ const ExamManagement = () => {
     fetchExams();
   }, []);
 
+  // Helper to format ISO date string to datetime-local input format (YYYY-MM-DDTHH:MM)
+  const formatForInput = (isoString) => {
+    if (!isoString) return '';
+    try {
+      const date = new Date(isoString);
+      const tzOffset = date.getTimezoneOffset() * 60000; // offset in milliseconds
+      const localISOTime = (new Date(date.getTime() - tzOffset)).toISOString().slice(0, 16);
+      return localISOTime;
+    } catch (e) {
+      return '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Ensure times are stored as ISO strings for consistent server comparison
+      const payload = {
+        ...formData,
+        start_time: formData.start_time ? new Date(formData.start_time).toISOString() : null,
+        end_time: formData.end_time ? new Date(formData.end_time).toISOString() : null
+      };
+
       if (editId) {
-        await axiosInstance.put(`/exams/${editId}`, formData);
+        await axiosInstance.put(`/exams/${editId}`, payload);
         toast.success('Exam updated successfully');
       } else {
-        const res = await createExam(formData);
+        const res = await createExam(payload);
         toast.success('Exam created successfully');
         navigate(`/admin/exams/${res.data.id}/questions`);
       }
@@ -176,14 +196,14 @@ const ExamManagement = () => {
 
                         <Button 
                           onClick={() => {
-                            setFormData({
-                               title: exam.title,
-                               description: exam.description || '',
-                               duration_minutes: exam.duration_minutes,
-                               passing_score: exam.passing_score,
-                               start_time: exam.start_time || '',
-                               end_time: exam.end_time || ''
-                            });
+                             setFormData({
+                                title: exam.title,
+                                description: exam.description || '',
+                                duration_minutes: exam.duration_minutes,
+                                passing_score: exam.passing_score,
+                                start_time: formatForInput(exam.start_time),
+                                end_time: formatForInput(exam.end_time)
+                             });
                             setEditId(exam.id);
                             setShowModal(true);
                           }}
