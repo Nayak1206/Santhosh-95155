@@ -57,7 +57,12 @@ export const login = async (req, res, next) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const userData = { id: user.id, name: user.name, email: user.email, role: user.role };
+    const userData = { 
+      id: Number(user.id), 
+      name: user.name, 
+      email: user.email, 
+      role: user.role 
+    };
     const { token, refreshToken } = generateTokens(userData);
 
     res.cookie('refreshToken', refreshToken, {
@@ -99,7 +104,9 @@ export const getMe = async (req, res, next) => {
       sql: 'SELECT id, name, email, role, profile_photo FROM users WHERE id = ?',
       args: [req.user.id]
     });
-    res.json(result.rows[0]);
+    const user = result.rows[0];
+    if (user) user.id = Number(user.id);
+    res.json(user);
   } catch (error) {
     next(error);
   }

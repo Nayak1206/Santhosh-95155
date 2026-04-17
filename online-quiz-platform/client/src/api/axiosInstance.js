@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  // Use Vercel env variable if available, otherwise fallback to the Render backend URL
-  baseURL: import.meta.env.VITE_API_URL || 'https://santhosh-95155.onrender.com/api',
+  // Intelligently pick the backend URL based on the current host
+  baseURL: import.meta.env.VITE_API_URL || 
+           (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://santhosh-95155.onrender.com/api'),
   withCredentials: true,
 });
 
