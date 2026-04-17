@@ -1,4 +1,5 @@
 // server/index.js
+process.env.TZ = 'Asia/Kolkata';
 import 'dotenv/config';
 import './src/config/env.js';
 import { initDb } from './src/config/db.js';

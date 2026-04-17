@@ -19,7 +19,10 @@ export const startAttempt = async (req, res, next) => {
 
     // Check availability window
     const now = new Date();
-    if (exam.start_time && new Date(exam.start_time) > now) {
+    const startTime = exam.start_time ? new Date(exam.start_time) : null;
+    
+    // Add a 2-minute grace period to account for slight clock drifts between server and client
+    if (startTime && startTime.getTime() > (now.getTime() + 120000)) {
       return res.status(403).json({ error: 'This exam has not started yet.' });
     }
     if (exam.end_time && new Date(exam.end_time) < now) {
