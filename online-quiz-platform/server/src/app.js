@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -83,13 +84,20 @@ app.get('/api', (req, res) => {
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {
   // Correct path to client/dist relative to server/src
-  const clientBuildPath = path.join(__dirname, '../../client/dist');
-  app.use(express.static(clientBuildPath));
+  const clientBuildPath = path.resolve(__dirname, '../../client/dist');
   
-  // Use a regex literal to avoid path-to-regexp compatibility issues in Express 5
-  app.get(/^(?!\/api|\/uploads).+/, (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });
+  if (fs.existsSync(clientBuildPath)) {
+    console.log(`✅ Serving static files from: ${clientBuildPath}`);
+    app.use(express.static(clientBuildPath));
+    
+    // Catch-all route to serve index.html for SPA routing
+    app.get(/^(?!\/api|\/uploads).+/, (req, res) => {
+      res.sendFile(path.join(clientBuildPath, 'index.html'));
+    });
+  } else {
+    console.warn(`⚠️ Warning: Client build directory not found at ${clientBuildPath}`);
+    console.warn('Backend will still run, but frontend files will not be served.');
+  }
 }
 
 // 404 Handler for API

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "build": "npm install --prefix ../client && npm run build --prefix ../client",
     "seed": "node src/db/seed.js",
     "migrate": "node src/db/migrations.js"
   },

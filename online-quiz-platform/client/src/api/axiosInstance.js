@@ -3,7 +3,7 @@ import axios from 'axios';
 const axiosInstance = axios.create({
   // Intelligently pick the backend URL based on the current host
   baseURL: import.meta.env.VITE_API_URL || 
-           (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://santhosh-95155.onrender.com/api'),
+           (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api'),
   withCredentials: true,
 });
 
