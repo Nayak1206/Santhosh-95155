@@ -13,26 +13,31 @@ export async function scoreAnswer(question, studentAnswer) {
   let isCorrect = false;
 
   if (question.question_type === 'mcq') {
-    // 1. Direct match (Label or Text)
-    if (studentAns === correctAns) {
-      isCorrect = true;
-    } else {
-      // 2. Map label to text and vice-versa
-      try {
-        const options = JSON.parse(question.options || '[]');
-        const labels = ['a', 'b', 'c', 'd'];
-        
-        const studentIdx = labels.indexOf(studentAns);
-        const correctIdx = options.findIndex(opt => normalize(opt) === correctAns);
-
-        if (studentIdx !== -1 && normalize(options[studentIdx]) === correctAns) {
-          isCorrect = true;
-        } else if (correctIdx !== -1 && labels[correctIdx] === studentAns) {
-          isCorrect = true;
+    try {
+      const optionsArr = JSON.parse(question.options || '[]');
+      const optionsMap = {
+        'A': optionsArr[0],
+        'B': optionsArr[1],
+        'C': optionsArr[2],
+        'D': optionsArr[3]
+      };
+      
+      const getMappedValue = (ans) => {
+        const a = normalize(ans).toUpperCase();
+        if (['A', 'B', 'C', 'D'].includes(a) && optionsMap[a]) {
+          return optionsMap[a];
         }
-      } catch (e) {
-        console.error('MCQ Scoring Error:', e.message);
+        return ans;
+      };
+
+      const studentValue = getMappedValue(studentAnswer);
+      const correctValue = getMappedValue(question.correct_answer);
+
+      if (normalize(studentValue) === normalize(correctValue) || normalize(studentAnswer) === normalize(question.correct_answer)) {
+        isCorrect = true;
       }
+    } catch (e) {
+      console.error('MCQ Scoring Error:', e.message);
     }
   } else if (question.question_type === 'coding') {
     // Coding evaluation with test cases

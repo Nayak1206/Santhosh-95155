@@ -7,6 +7,7 @@ import { CheckCircle, XCircle, Trophy, Clock, ChevronDown, ChevronUp, Download, 
 import { toast } from 'react-hot-toast';
 
 const ExamResult = () => {
+  const normalize = (val) => val?.toString().trim().toLowerCase() || '';
   const { attemptId } = useParams();
   const [data, setData] = useState(null);
   const [rankData, setRankData] = useState(null);
@@ -178,10 +179,8 @@ const ExamResult = () => {
                     {q.question_type === 'mcq' && q.options ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {JSON.parse(q.options).map((opt, i) => {
-                          const normalize = (val) => val?.toString().trim().toLowerCase() || '';
                           const label = String.fromCharCode(65 + i);
                           
-                          // Independent Logic Checks
                           const isCorrectOption = normalize(label) === normalize(q.correct_answer) || normalize(opt) === normalize(q.correct_answer);
                           const isSelectedOption = normalize(label) === normalize(q.student_answer) || normalize(opt) === normalize(q.student_answer);
                           const isIncorrect = !q.is_correct;

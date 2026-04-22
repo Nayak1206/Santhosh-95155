@@ -17,15 +17,19 @@ const ExamAttempt = () => {
   const { attemptId } = useParams();
   const navigate = useNavigate();
   const videoRef = useRef(null);
-  const { startCamera, stopCamera, cameraActive } = useCamera();
+  const { startCamera, stopCamera, cameraActive, streamRef } = useCamera();
+
+  const [loading, setLoading] = useState(true);
+  const [exam, setExam] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [answers, setAnswers] = useState([]); // Array of { question_id, student_answer }
+  const [timeRemaining, setTimeRemaining] = useState(null);
 
   useEffect(() => {
     const init = async () => {
       try {
-        const stream = await startCamera();
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
+        await startCamera();
       } catch (err) {
         // Error already logged by hook, just provide UI feedback
         toast.error("Proctoring required: Please enable your camera.", { icon: '📷' });
@@ -43,12 +47,12 @@ const ExamAttempt = () => {
     };
   }, [startCamera, stopCamera]);
 
-  const [loading, setLoading] = useState(true);
-  const [exam, setExam] = useState(null);
-  const [questions, setQuestions] = useState([]);
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [answers, setAnswers] = useState([]); // Array of { question_id, student_answer }
-  const [timeRemaining, setTimeRemaining] = useState(null);
+  // Sync stream to video element whenever loading finishes or camera starts
+  useEffect(() => {
+    if (!loading && cameraActive && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [loading, cameraActive]);
 
   useEffect(() => {
     const initExam = async () => {
